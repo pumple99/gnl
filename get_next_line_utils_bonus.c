@@ -52,21 +52,21 @@ size_t	s_len(char const *s)
 	return (len);
 }
 
-size_t	len_until_char(const char *s, char c, size_t range)
+size_t	len_until_nl(const char *s, size_t range)
 {
 	size_t	idx;
 
 	idx = 0;
 	while (idx < range && s[idx])
 	{
-		if (s[idx] == c)
+		if (s[idx] == '\n')
 			return (1 + idx);
 		idx++;
 	}
 	return (0);
 }
 
-char	*s_join_free_s1(char *s1, char *s2, size_t byte)
+char	*s_join_free_s1(char *s1, char *s2, size_t byte, int *err)
 {
 	size_t	len1;
 	size_t	idx;
@@ -78,6 +78,7 @@ char	*s_join_free_s1(char *s1, char *s2, size_t byte)
 	sj = (char *)malloc(len1 + byte + 1);
 	if (sj == 0)
 	{
+		*err = 1;
 		free(s1);
 		return (0);
 	}
@@ -92,7 +93,7 @@ char	*s_join_free_s1(char *s1, char *s2, size_t byte)
 	return (sj);
 }
 
-char	*sub_s(char const *s, unsigned int start, size_t len)
+char	*sub_s(char const *s, unsigned int start, size_t len, int *err)
 {
 	char	*ss;
 	size_t	idx;
@@ -101,7 +102,10 @@ char	*sub_s(char const *s, unsigned int start, size_t len)
 		return (0);
 	ss = (char *)malloc(len + 1);
 	if (ss == 0)
+	{
+		*err = 1;
 		return (0);
+	}
 	idx = 0 - 1;
 	while (++idx < len)
 		ss[idx] = s[start + idx];
